@@ -1,8 +1,21 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 
-const Spinner = () => {
-  return <View>Hahah!</View>;
+const Spinner = props => {
+  return (
+    <View style={styles.spinnerStyle}>
+      <ActivityIndicator size={props.size || "large"} />
+    </View>
+  );
+};
+
+const styles = {
+  // make sure spinner is at center of screen
+  spinnerStyle: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  }
 };
 
 export { Spinner };

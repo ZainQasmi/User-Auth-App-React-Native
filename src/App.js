@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { View } from "react-native";
 import firebase from "firebase";
-import { Header } from "./components/common";
+import { Header, Button } from "./components/common";
 import LoginForm from "./components/LoginForm";
 
 class App extends Component {
-  state = {};
+  state = { loggedIn: false };
 
   componentWillMount() {
     firebase.initializeApp({
@@ -16,13 +16,28 @@ class App extends Component {
       storageBucket: "auth-react-alpha.appspot.com",
       messagingSenderId: "280500996601"
     });
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ loggedIn: true });
+      } else {
+        this.setState({ loggedIn: false });
+      }
+    });
+  }
+
+  renderContent() {
+    if (this.state.loggedIn) {
+      return <Button>Log Out</Button>;
+    }
+    return <LoginForm />;
   }
 
   render() {
     return (
       <View>
         <Header>Authentication</Header>
-        <LoginForm />
+        {this.renderContent()}
       </View>
     );
   }

@@ -1,28 +1,77 @@
 import React, { Component } from "react";
 import { Text } from "react-native";
 import firebase from "firebase";
-import { Button, Card, CardSection, Input } from "./common";
+import { Button, Card, CardSection, Input, Spinner } from "./common";
 
 // Text inputs by default do not have a default height, width or styling just like images. FML
 
 class LoginForm extends Component {
-  state = { email: "", password: "", error: "" };
+  state = {
+    email: "",
+    password: "",
+    error: "",
+    loading: false,
+    styleColor: ""
+  };
+
+  onSignupSuccess = () => {
+    this.setState({
+      error: "Account Created ",
+      loading: false,
+      styleColor: styles.okTextStyle
+    });
+  };
+
+  onLoginSuccess = () => {
+    this.setState({
+      error: "Authentication Success",
+      loading: false,
+      styleColor: styles.passTextStyle
+    });
+  };
+
+  onLoginFail = () => {
+    this.setState({
+      error: "Authentication Failed",
+      loading: false,
+      styleColor: styles.errorTextStyle
+    });
+  };
 
   onButtonPress = () => {
     const { email, password } = this.state;
 
-    this.setState({ error: "" });
+    this.setState({ error: "", loading: true });
 
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
+      .then(this.onLoginSuccess)
       .catch(() => {
         firebase
           .auth()
           .createUserWithEmailAndPassword(email, password)
-          .catch(() => this.setState({ error: "Authenticated Failed" }));
+          .then(this.onSignupSuccess)
+          .catch(this.onLoginFail);
       });
+
+    //
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(function(user) {
+        var user = firebase.auth().currentUser;
+        logUser(user); // Optional
+      });
+    //
   };
+
+  renderButton() {
+    if (this.state.loading) {
+      return <Spinner size="small" />;
+    }
+    return <Button onPress={this.onButtonPress}>Login</Button>;
+  }
 
   render() {
     return (
@@ -35,6 +84,7 @@ class LoginForm extends Component {
             onChangeText={text => this.setState({ email: text })}
           />
         </CardSection>
+
         <CardSection>
           <Input
             secureTextEntry={true}
@@ -45,11 +95,10 @@ class LoginForm extends Component {
           />
         </CardSection>
 
-        <Text style={styles.errorTextStyle}>{this.state.error}</Text>
+        {/* <Text style={styles.errorTextStyle}>{this.state.error}</Text> */}
+        <Text style={this.state.styleColor}>{this.state.error}</Text>
 
-        <CardSection>
-          <Button onPress={this.onButtonPress}>Login</Button>
-        </CardSection>
+        <CardSection>{this.renderButton()}</CardSection>
       </Card>
     );
   }
@@ -60,6 +109,16 @@ const styles = {
     fontSize: 20,
     alignSelf: "center",
     color: "red"
+  },
+  passTextStyle: {
+    fontSize: 20,
+    alignSelf: "center",
+    color: "green"
+  },
+  okTextStyle: {
+    fontSize: 20,
+    alignSelf: "center",
+    color: "orange"
   }
 };
 
