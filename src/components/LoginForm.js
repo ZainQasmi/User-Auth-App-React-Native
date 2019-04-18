@@ -54,16 +54,6 @@ class LoginForm extends Component {
           .then(this.onSignupSuccess)
           .catch(this.onLoginFail);
       });
-
-    //
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(function(user) {
-        var user = firebase.auth().currentUser;
-        logUser(user); // Optional
-      });
-    //
   };
 
   renderButton() {

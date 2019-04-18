@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View } from "react-native";
 import firebase from "firebase";
-import { Header, Button } from "./components/common";
+import { Header, Button, CardSection, Spinner } from "./components/common";
 import LoginForm from "./components/LoginForm";
 
 class App extends Component {
@@ -27,10 +27,37 @@ class App extends Component {
   }
 
   renderContent() {
-    if (this.state.loggedIn) {
-      return <Button>Log Out</Button>;
+    switch (this.state.loggedIn) {
+      case true:
+        return (
+          <CardSection>
+            <Button
+              onPress={() => {
+                firebase.auth().signOut();
+              }}
+            >
+              Log Out
+            </Button>
+          </CardSection>
+        );
+      case false:
+        return <LoginForm />;
+      default:
+        return (
+          <View style={styles.spinnerView}>
+            <Spinner size="small" />
+          </View>
+        );
     }
-    return <LoginForm />;
+
+    // if (this.state.loggedIn) {
+    //   return (
+    //     <CardSection>
+    //       <Button>Log Out</Button>
+    //     </CardSection>
+    //   );
+    // }
+    // return <LoginForm />;
   }
 
   render() {
@@ -42,5 +69,11 @@ class App extends Component {
     );
   }
 }
+
+const styles = {
+  spinnerView: {
+    alignSelf: "center"
+  }
+};
 
 export default App;
