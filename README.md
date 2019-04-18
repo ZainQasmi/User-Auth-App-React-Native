@@ -2,14 +2,28 @@
 
 * Simple react app that allows user to register/login using firebase. On login app loads a list of music albums, essentially a json object, via an ajax call and users can buy the tracks they like.
 
-### Getting Started
+## Getting Started
 
 ```react-native run-ios --simulator="iPhone 8 Plus"```
 
-![GitHub Logo](/snapshots/screenshot0.png)
 
-![GitHub Logo](/snapshots/screenshot1.png)
+## Built With
 
-![GitHub Logo](/snapshots/screenshot2.png)
+* [React Native](https://facebook.github.io/react-native/) - Mobile App Framework
+* [Firebase](https://firebase.google.com/) - User Authentication
+* [Axios](https://firebase.google.com/) - Promise based HTTP client
 
-![GitHub Logo](/snapshots/screenshot3.png)
+## Snapshots
+
+![1](/snapshots/screenshot0.png)
+![2](/snapshots/screenshot1.png)
+![3](/snapshots/screenshot2.png)
+![4](/snapshots/screenshot3.png)
+
+## Author
+
+* [Zain Qasmi](https://github.com/ZainQasmi)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
