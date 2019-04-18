@@ -55,6 +55,12 @@ class App extends Component {
   }
 }
 
+const styles = {
+  spinnerView: {
+    alignSelf: "center"
+  }
+};
+
 export default App;
 
 // <React.Fragment>
