@@ -56,13 +56,13 @@ class LoginForm extends Component {
       });
 
     //
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(function(user) {
-        var user = firebase.auth().currentUser;
-        logUser(user); // Optional
-      });
+    // firebase
+    //   .auth()
+    //   .createUserWithEmailAndPassword(email, password)
+    //   .then(function(user) {
+    //     var user = firebase.auth().currentUser;
+    //     logUser(user); // Optional
+    //   });
     //
   };
 
@@ -77,6 +77,7 @@ class LoginForm extends Component {
     return (
       <Card>
         <CardSection>
+          {/* Taking input - Creating controlled components inside React */}
           <Input
             placeholder="xyz@gmail.com"
             label="Email"

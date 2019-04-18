@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { View } from "react-native";
 import firebase from "firebase";
-import { Header, Button } from "./components/common";
+import { Header, Button, Spinner, CardSection } from "./components/common";
 import LoginForm from "./components/LoginForm";
+import AlbumList from "./components/AlbumList";
 
 class App extends Component {
-  state = { loggedIn: false };
+  state = { loggedIn: null };
 
   componentWillMount() {
     firebase.initializeApp({
@@ -27,20 +28,38 @@ class App extends Component {
   }
 
   renderContent() {
-    if (this.state.loggedIn) {
-      return <Button>Log Out</Button>;
+    switch (this.state.loggedIn) {
+      case true:
+        return (
+          <React.Fragment>
+            <Header>Albums</Header>
+            <CardSection>
+              <Button onPress={() => firebase.auth().signOut()}>Log Out</Button>
+            </CardSection>
+            <AlbumList />
+          </React.Fragment>
+        );
+      case false:
+        return [<Header key={1}>Authentication</Header>, <LoginForm key={2} />];
+      default:
+        return (
+          <CardSection>
+            <Spinner size="large" />
+          </CardSection>
+        );
     }
-    return <LoginForm />;
   }
 
   render() {
-    return (
-      <View>
-        <Header>Authentication</Header>
-        {this.renderContent()}
-      </View>
-    );
+    return <View style={{ flex: 1 }}>{this.renderContent()}</View>;
   }
 }
 
 export default App;
+
+// <React.Fragment>
+//             <AlbumList />
+//             <CardSection>
+//               <Button onPress={() => firebase.auth().signOut()}>Log Out</Button>
+//             </CardSection>
+//           </React.Fragment>
