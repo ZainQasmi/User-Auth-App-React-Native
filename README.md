@@ -15,7 +15,7 @@
 
 * [React Native](https://facebook.github.io/react-native/) - Mobile App Framework
 * [Firebase](https://firebase.google.com/) - User Authentication
-* [Axios](https://firebase.google.com/) - Promise based HTTP client
+* [Axios](https://github.com/axios/axios) - Promise based HTTP client
 
 ## Snapshots
 
