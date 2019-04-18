@@ -67,6 +67,7 @@ class LoginForm extends Component {
     return (
       <Card>
         <CardSection>
+          {/* Taking input - Creating controlled components inside React */}
           <Input
             placeholder="xyz@gmail.com"
             label="Email"
