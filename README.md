@@ -4,6 +4,10 @@
 
 ## Getting Started
 
+```brew install node```
+
+```npm install```
+
 ```react-native run-ios --simulator="iPhone 8 Plus"```
 
 
