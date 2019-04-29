@@ -14,15 +14,17 @@ class RegistrationForm extends Component {
 
   registerSuccess = () => {
     this.setState({
-      error: "Successfully Registered",
+      error: "Registration Success! Redirecting to login...",
       loading: false,
-      styleColor: styles.passTextStyle
+      styleColor: styles.okTextStyle
     });
-    this.props.onRegister();
+    setTimeout(() => {
+      this.props.onRegister();
+    }, 2000);
   };
 
   registerFail = msg => {
-    console.log(msg)
+    console.log(msg);
     this.setState({
       error: msg,
       loading: false,
@@ -32,25 +34,45 @@ class RegistrationForm extends Component {
 
   onRegisterButtonPress = () => {
     const { firstName, lastName, email, password } = this.state;
-    this.setState({ error: "", loading: true });
 
-    axios
-      .post("http://192.168.45.28:4000/users/register", {
-        firstName: firstName,
-        lastName: lastName,
-        username: email,
-        password: password
-      })
-      .then(response => {
-        if (response.status === 200) {
-          this.registerSuccess();
-        }
-      })
-      .catch(error => {
-        if (error.response.status === 400) {
-          this.registerFail(error.response.data.message);
-        }
+    let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let nameRegex = /^[a-zA-Z ]{2,30}$/;
+    if (
+      nameRegex.test(firstName) === false ||
+      nameRegex.test(lastName) === false
+    ) {
+      this.setState({
+        error: "Invalid Name",
+        loading: false,
+        styleColor: styles.errorTextStyle
       });
+    } else if (emailRegex.test(email) === false) {
+      this.setState({
+        error: "Invalid Email",
+        loading: false,
+        styleColor: styles.errorTextStyle
+      });
+    } else {
+      this.setState({ error: "", loading: true });
+
+      axios
+        .post("http://192.168.45.28:4000/users/register", {
+          firstName: firstName,
+          lastName: lastName,
+          username: email,
+          password: password
+        })
+        .then(response => {
+          if (response.status === 200) {
+            this.registerSuccess();
+          }
+        })
+        .catch(error => {
+          if (error.response.status === 400) {
+            this.registerFail(error.response.data.message);
+          }
+        });
+    }
   };
 
   renderButton() {
@@ -75,6 +97,7 @@ class RegistrationForm extends Component {
               onChangeText={text => this.setState({ firstName: text })}
             />
           </CardSection>
+
           <CardSection>
             <Input
               label="Last Name"
@@ -82,6 +105,7 @@ class RegistrationForm extends Component {
               onChangeText={text => this.setState({ lastName: text })}
             />
           </CardSection>
+
           <CardSection>
             <Input
               label="Email"
@@ -89,6 +113,7 @@ class RegistrationForm extends Component {
               onChangeText={text => this.setState({ email: text })}
             />
           </CardSection>
+
           <CardSection>
             <Input
               secureTextEntry={true}
@@ -97,8 +122,10 @@ class RegistrationForm extends Component {
               onChangeText={text => this.setState({ password: text })}
             />
           </CardSection>
+
           <CardSection>{this.renderButton()}</CardSection>
         </Card>
+
         <Text style={this.state.styleColor}>{this.state.error}</Text>
       </React.Fragment>
     );

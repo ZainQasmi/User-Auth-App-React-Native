@@ -4,14 +4,13 @@ import { Header, Button, Spinner, CardSection } from "./components/common";
 import LoginForm from "./components/LoginForm";
 import AlbumList from "./components/AlbumList";
 import RegistrationForm from "./components/RegistrationForm";
-// import RegistrationForm from "./components/RegistrationForm";
 
 class App extends Component {
-  state = { loggedIn: "LoginPage", msg: "" };
+  state = { loggedIn: "LoginPage", currentUser: "" };
 
-  homePage = () => {
-    console.log("it works");
-    this.setState({ loggedIn: "Home" });
+  homePage = response => {
+    const currUser = response.data.firstName + " " + response.data.lastName;
+    this.setState({ loggedIn: "Home", currentUser: currUser });
   };
 
   loginPage = () => {
@@ -20,8 +19,7 @@ class App extends Component {
 
   loginPageAfterRegistration = () => {
     this.setState({
-      loggedIn: "LoginPage",
-      msg: "Registration Success! You may now login"
+      loggedIn: "LoginPage"
     });
   };
 
@@ -34,7 +32,7 @@ class App extends Component {
       case "Home":
         return (
           <React.Fragment>
-            <Header>Albums</Header>
+            <Header>Welcome {this.state.currentUser}!</Header>
             <CardSection>
               <Button onPress={this.loginPage}>Log Out</Button>
             </CardSection>
@@ -48,7 +46,6 @@ class App extends Component {
             key={2}
             logIn={this.homePage}
             registerMe={this.registrationPage}
-            msg={this.state.msg}
           />
         ];
       case "RegisterPage":
@@ -60,12 +57,6 @@ class App extends Component {
             onCancel={this.loginPage}
           />
         ];
-      default:
-        return (
-          <CardSection>
-            <Spinner size="large" />
-          </CardSection>
-        );
     }
   }
 
@@ -73,11 +64,5 @@ class App extends Component {
     return <View style={{ flex: 1 }}>{this.renderContent()}</View>;
   }
 }
-
-const styles = {
-  spinnerView: {
-    alignSelf: "center"
-  }
-};
 
 export default App;
