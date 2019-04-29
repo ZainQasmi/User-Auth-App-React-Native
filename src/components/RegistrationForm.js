@@ -1,74 +1,65 @@
 import React, { Component } from "react";
-import { Text } from "react-native";
-import firebase from "firebase";
+import { View, Text } from "react-native";
 import { Button, Card, CardSection, Input, Spinner } from "./common";
 import axios from "axios";
 
-// Text inputs by default do not have a default height, width or styling just like images. FML
-
-class LoginForm extends Component {
+class RegistrationForm extends Component {
   state = {
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
-    error: "",
-    loading: false,
-    styleColor: ""
+    error: ""
   };
 
-  componentDidMount() {
-    this.setState({ error: this.props.msg, styleColor: styles.okTextStyle });
-  }
-
-  onLoginSuccess = () => {
+  registerSuccess = () => {
     this.setState({
-      error: "Authentication Success",
+      error: "Successfully Registered",
       loading: false,
       styleColor: styles.passTextStyle
     });
-    this.props.logIn();
+    this.props.onRegister();
   };
 
-  onLoginFail = () => {
+  registerFail = msg => {
+    console.log(msg)
     this.setState({
-      error: "Authentication Failed",
+      error: msg,
       loading: false,
       styleColor: styles.errorTextStyle
     });
   };
 
-  onLoginButtonPress = () => {
-    const { email, password } = this.state;
+  onRegisterButtonPress = () => {
+    const { firstName, lastName, email, password } = this.state;
     this.setState({ error: "", loading: true });
 
     axios
-      .post("http://192.168.45.28:4000/users/authenticate", {
+      .post("http://192.168.45.28:4000/users/register", {
+        firstName: firstName,
+        lastName: lastName,
         username: email,
         password: password
       })
       .then(response => {
         if (response.status === 200) {
-          console.log(response);
-          this.onLoginSuccess();
+          this.registerSuccess();
         }
       })
       .catch(error => {
-        console.log(error.response.data.message);
         if (error.response.status === 400) {
-          this.onLoginFail();
+          this.registerFail(error.response.data.message);
         }
       });
   };
 
   renderButton() {
-    if (this.state.loading) {
-      return <Spinner size="small" />;
-    }
     return [
-      <Button key={1} onPress={this.onLoginButtonPress}>
-        Login
-      </Button>,
-      <Button key={2} onPress={this.props.registerMe}>
+      <Button key={1} onPress={this.onRegisterButtonPress}>
         Register
+      </Button>,
+      <Button key={2} onPress={this.props.onCancel}>
+        Cancel
       </Button>
     ];
   }
@@ -78,19 +69,29 @@ class LoginForm extends Component {
       <React.Fragment>
         <Card>
           <CardSection>
-            {/* Taking input - Creating controlled components inside React */}
             <Input
-              placeholder="xyz@gmail.com"
+              label="First Name"
+              value={this.state.firstName}
+              onChangeText={text => this.setState({ firstName: text })}
+            />
+          </CardSection>
+          <CardSection>
+            <Input
+              label="Last Name"
+              value={this.state.lastName}
+              onChangeText={text => this.setState({ lastName: text })}
+            />
+          </CardSection>
+          <CardSection>
+            <Input
               label="Email"
               value={this.state.email}
               onChangeText={text => this.setState({ email: text })}
             />
           </CardSection>
-
           <CardSection>
             <Input
               secureTextEntry={true}
-              placeholder="password"
               label="Password"
               value={this.state.password}
               onChangeText={text => this.setState({ password: text })}
@@ -122,4 +123,4 @@ const styles = {
   }
 };
 
-export default LoginForm;
+export default RegistrationForm;

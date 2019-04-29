@@ -20,16 +20,16 @@ const Input = props => {
 const styles = {
   inputStyle: {
     color: "#000",
-    paddingRight: 5,
-    paddingLeft: 5,
+    paddingRight: 10,
+    paddingLeft: 10,
     fontSize: 18,
     lineHeight: 23,
-    flex: 3
+    flex: 4
   },
   labelStyle: {
     fontSize: 18,
     paddingLeft: 20,
-    flex: 1
+    flex: 2
   },
   viewContainerStyle: {
     height: 40,

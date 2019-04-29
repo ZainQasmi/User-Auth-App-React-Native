@@ -1,46 +1,65 @@
 import React, { Component } from "react";
 import { View } from "react-native";
-import firebase from "firebase";
 import { Header, Button, Spinner, CardSection } from "./components/common";
 import LoginForm from "./components/LoginForm";
 import AlbumList from "./components/AlbumList";
+import RegistrationForm from "./components/RegistrationForm";
+// import RegistrationForm from "./components/RegistrationForm";
 
 class App extends Component {
-  state = { loggedIn: null };
+  state = { loggedIn: "LoginPage", msg: "" };
 
-  componentWillMount() {
-    firebase.initializeApp({
-      apiKey: "AIzaSyASS8GEv5poQ7pT5OxPSo3Lz1UcGeZjsSE",
-      authDomain: "auth-react-alpha.firebaseapp.com",
-      databaseURL: "https://auth-react-alpha.firebaseio.com",
-      projectId: "auth-react-alpha",
-      storageBucket: "auth-react-alpha.appspot.com",
-      messagingSenderId: "280500996601"
-    });
+  homePage = () => {
+    console.log("it works");
+    this.setState({ loggedIn: "Home" });
+  };
 
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.setState({ loggedIn: true });
-      } else {
-        this.setState({ loggedIn: false });
-      }
+  loginPage = () => {
+    this.setState({ loggedIn: "LoginPage" });
+  };
+
+  loginPageAfterRegistration = () => {
+    this.setState({
+      loggedIn: "LoginPage",
+      msg: "Registration Success! You may now login"
     });
-  }
+  };
+
+  registrationPage = () => {
+    this.setState({ loggedIn: "RegisterPage" });
+  };
 
   renderContent() {
     switch (this.state.loggedIn) {
-      case true:
+      case "Home":
         return (
           <React.Fragment>
             <Header>Albums</Header>
             <CardSection>
-              <Button onPress={() => firebase.auth().signOut()}>Log Out</Button>
+              <Button onPress={this.loginPage}>Log Out</Button>
             </CardSection>
             <AlbumList />
           </React.Fragment>
         );
-      case false:
-        return [<Header key={1}>Authentication</Header>, <LoginForm key={2} />];
+      case "LoginPage":
+        return [
+          <Header key={1}>Authentication</Header>,
+          <LoginForm
+            key={2}
+            logIn={this.homePage}
+            registerMe={this.registrationPage}
+            msg={this.state.msg}
+          />
+        ];
+      case "RegisterPage":
+        return [
+          <Header key={1}>Register</Header>,
+          <RegistrationForm
+            key={2}
+            onRegister={this.loginPageAfterRegistration}
+            onCancel={this.loginPage}
+          />
+        ];
       default:
         return (
           <CardSection>
@@ -62,10 +81,3 @@ const styles = {
 };
 
 export default App;
-
-// <React.Fragment>
-//             <AlbumList />
-//             <CardSection>
-//               <Button onPress={() => firebase.auth().signOut()}>Log Out</Button>
-//             </CardSection>
-//           </React.Fragment>
